@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant/widgets/DrawerMenu.dart';
 import 'package:restaurant/widgets/FormItem.dart';
+import 'package:restaurant/widgets/FormMenuStep1.dart';
 
 
 class ChoixTypeItem extends StatefulWidget {
@@ -53,7 +54,7 @@ class _StatChoixTypeItem extends State<ChoixTypeItem>{
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => FormItem("Menu", 0)),
+                  MaterialPageRoute(builder: (context) => FormMenuStep1(0)),
                 );
               },
             ),

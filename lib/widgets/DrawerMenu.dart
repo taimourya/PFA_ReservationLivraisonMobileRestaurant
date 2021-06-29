@@ -3,6 +3,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:restaurant/widgets/CommandeEnCours.dart';
 import 'package:restaurant/widgets/GestionRestaurant.dart';
 import 'package:restaurant/widgets/Home.dart';
 import 'package:restaurant/widgets/Localisation.dart';
@@ -39,6 +40,16 @@ class DrawerMenu extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => GestionRestaurant()),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.shopping_cart),
+            title: Text('Mes commandes'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CommandeEnCours()),
               );
             },
           ),
