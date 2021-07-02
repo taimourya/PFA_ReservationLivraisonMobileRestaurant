@@ -25,6 +25,8 @@ dependencies:
 
   http: ^0.13.3
   intl: ^0.17.0
+  flutter_login: ^2.1.0
+  shared_preferences: ^2.0.6
 
   flutter:
     sdk: flutter
@@ -53,6 +55,8 @@ flutter:
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

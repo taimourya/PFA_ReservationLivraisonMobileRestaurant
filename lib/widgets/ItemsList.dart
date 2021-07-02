@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant/widgets/Item.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class ItemsList extends StatefulWidget {
@@ -27,20 +28,34 @@ class StatItemList extends State<ItemsList> {
   String searchText = "";
   final _formKey = GlobalKey<FormState>();
 
+  Duration get loginTime => Duration(milliseconds: 100);
+  late int userId;
   dynamic data;
 
   @override
   void initState() {
     super.initState();
-    _initItems();
+    getSharedUserId();
+    Future.delayed(loginTime).then((_) {
+      _initItems();
+    });
+
   }
 
+  Future<void> getSharedUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final id = prefs.getInt('user_id');
+
+    setState(() {
+      userId = id == null? 0 : id;
+    });
+  }
 
 
   _initItems() {
     var url = Uri.parse(
         "http://192.168.8.111:8080/restaurant/buyables?"
-        "restaurant_id=${5}"
+        "restaurant_id=$userId"
         "&type=${widget.title}"
         "&mc=${this.searchText}"
     );

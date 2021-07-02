@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:restaurant/widgets/DrawerMenu.dart';
 import 'package:http/http.dart' as http;
 import 'package:restaurant/widgets/GestionRestaurant.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FormMenuStep2 extends StatefulWidget {
 
@@ -31,20 +32,35 @@ class _StateFormMenuStep2 extends State<FormMenuStep2>{
   List<int> selectedItems = [];
   final _formKey = GlobalKey<FormState>();
 
+
+  Duration get loginTime => Duration(milliseconds: 100);
+  late int userId;
   dynamic data;
 
   @override
   void initState() {
     super.initState();
-    _initItems();
+    getSharedUserId();
+    Future.delayed(loginTime).then((_) {
+      _initItems();
+    });
+
   }
 
+  Future<void> getSharedUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final id = prefs.getInt('user_id');
+
+    setState(() {
+      userId = id == null? 0 : id;
+    });
+  }
 
 
   _initItems() {
     var url = Uri.parse(
         "http://192.168.8.111:8080/restaurant/buyables?"
-            "restaurant_id=${5}"
+            "restaurant_id=$userId"
             "&type=All"
             "&mc=${this.searchText}"
     );
@@ -69,7 +85,7 @@ class _StateFormMenuStep2 extends State<FormMenuStep2>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, Object>{
-        'restaurant_id': '5',
+        'restaurant_id': this.userId,
         "name": widget.nomMenu,
         "price": widget.prixMenu,
         "items": selectedItems

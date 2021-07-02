@@ -67,10 +67,15 @@ class StatItem extends State<Item> {
                 style: Theme.of(context).textTheme.headline4
             ),
             SizedBox(height: 35,),
-            Text(
-                "Categorie : ${data != null ? data['category']['name']: "..."}",
-                style: Theme.of(context).textTheme.headline5
-            ),
+
+            data['category'] != null?
+              Text(
+                  "Categorie : ${data != null ? data['category']['name']: "..."}",
+                  style: Theme.of(context).textTheme.headline5
+              )
+            :
+                Text(""),
+
             SizedBox(height: 35,),
             Text(
                 "Prix : ${data != null ? data['price']: "..."} DH",

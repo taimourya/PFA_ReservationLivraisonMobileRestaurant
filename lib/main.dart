@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant/widgets/Home.dart';
+import 'package:restaurant/widgets/Login.dart';
 
 // @dart=2.9
 void main() {
@@ -11,11 +12,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Restaurant Application',
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: Home(),
+      home: Login(),
     );
   }
 }

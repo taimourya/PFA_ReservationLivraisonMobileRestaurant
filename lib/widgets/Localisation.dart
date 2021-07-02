@@ -11,6 +11,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:restaurant/widgets/DrawerMenu.dart';
 import 'package:http/http.dart' as http;
 import 'package:restaurant/widgets/GestionRestaurant.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Localisation extends StatefulWidget {
   @override
@@ -26,10 +27,26 @@ class _StateLocalisation extends State<Localisation>{
 
   final LatLng _center = const LatLng(33.5761412, -7.5427257);
 
+  late int userId;
+
   late Marker source = Marker(
       markerId: MarkerId('home'),
       position: LatLng(0, 0),
   );
+
+  @override
+  void initState() {
+    super.initState();
+    getSharedUserId();
+  }
+  Future<void> getSharedUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final id = prefs.getInt('user_id');
+
+    setState(() {
+      userId = id == null? 0 : id;
+    });
+  }
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -38,7 +55,7 @@ class _StateLocalisation extends State<Localisation>{
   _saveLocalisation() {
     var url = Uri.parse(
         "http://192.168.8.111:8080/restaurant/localisation"
-            "?restaurant_id=${5}"
+            "?restaurant_id=$userId"
             "&latitude=${source.position.latitude}"
             "&longitude=${source.position.longitude}"
     );

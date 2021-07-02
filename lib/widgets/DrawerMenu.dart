@@ -7,10 +7,18 @@ import 'package:restaurant/widgets/CommandeEnCours.dart';
 import 'package:restaurant/widgets/GestionRestaurant.dart';
 import 'package:restaurant/widgets/Home.dart';
 import 'package:restaurant/widgets/Localisation.dart';
+import 'package:restaurant/widgets/Login.dart';
 import 'package:restaurant/widgets/Reclamation.dart';
 import 'package:restaurant/widgets/Settings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DrawerMenu extends StatelessWidget {
+
+  Future<void> removeSharedUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('user_id');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -80,6 +88,17 @@ class DrawerMenu extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => Settings()),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.logout),
+            title: Text('Logout'),
+            onTap: () {
+              removeSharedUserId();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Login()),
               );
             },
           ),
