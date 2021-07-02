@@ -47,7 +47,7 @@ class StateGestionRestaurant extends State<GestionRestaurant> {
             children: <Widget>[
               ItemsList("Food"),
               ItemsList("Menu"),
-              ItemsList("Boisson"),
+              ItemsList("Drink"),
             ],
           ),
         )

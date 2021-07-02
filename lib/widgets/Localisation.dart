@@ -3,12 +3,14 @@
 
 import 'dart:async';
 import 'dart:ffi';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:restaurant/widgets/DrawerMenu.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:restaurant/widgets/GestionRestaurant.dart';
 
 class Localisation extends StatefulWidget {
   @override
@@ -33,6 +35,25 @@ class _StateLocalisation extends State<Localisation>{
     mapController = controller;
   }
 
+  _saveLocalisation() {
+    var url = Uri.parse(
+        "http://192.168.8.111:8080/restaurant/localisation"
+            "?restaurant_id=${5}"
+            "&latitude=${source.position.latitude}"
+            "&longitude=${source.position.longitude}"
+    );
+    http.get(url).then((response) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => GestionRestaurant()),
+      );
+
+    }).catchError((err) {
+      print(err);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Probleme au niveau du serveur')));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +66,7 @@ class _StateLocalisation extends State<Localisation>{
               child: Text("Envoyer", style: TextStyle(color: Colors.cyan, fontSize: 15),),
               onPressed: () {
                 if(source.position.latitude != 0 || source.position.longitude != 0) {
-                  //save
+                  _saveLocalisation();
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text('localisation sauvegarder')));
                 }

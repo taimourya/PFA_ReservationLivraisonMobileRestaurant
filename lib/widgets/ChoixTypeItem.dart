@@ -66,7 +66,7 @@ class _StatChoixTypeItem extends State<ChoixTypeItem>{
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => FormItem("Boisson", 0)),
+                  MaterialPageRoute(builder: (context) => FormItem("Drink", 0)),
                 );
               },
             ),

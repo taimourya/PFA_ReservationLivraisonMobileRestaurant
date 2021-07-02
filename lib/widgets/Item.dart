@@ -2,10 +2,13 @@
 
 
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant/widgets/DrawerMenu.dart';
 import 'package:restaurant/widgets/FormItem.dart';
+import 'package:http/http.dart' as http;
 
 
 class Item extends StatefulWidget {
@@ -22,6 +25,31 @@ class Item extends StatefulWidget {
 
 class StatItem extends State<Item> {
 
+
+  dynamic data;
+
+  @override
+  void initState() {
+    super.initState();
+    _initItem();
+  }
+
+  _initItem() {
+    var url = Uri.parse(
+        "http://192.168.8.111:8080/buyable?id=${widget.itemId}"
+    );
+    http.get(url).then((response) {
+      print(response.body);
+      setState(() {
+        data = json.decode(response.body);
+      });
+    }).catchError((err) {
+      print(err);
+
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,17 +63,17 @@ class StatItem extends State<Item> {
           children: [
             SizedBox(height: 50,),
             Text(
-                "Nom de l'item ID ${widget.itemId}",
+                "${data != null ? data['name']: '...'}",
                 style: Theme.of(context).textTheme.headline4
             ),
             SizedBox(height: 35,),
             Text(
-                "Categorie : ${"Food"}",
+                "Categorie : ${data != null ? data['category']['name']: "..."}",
                 style: Theme.of(context).textTheme.headline5
             ),
             SizedBox(height: 35,),
             Text(
-                "Prix : ${"35"} DH",
+                "Prix : ${data != null ? data['price']: "..."} DH",
                 style: Theme.of(context).textTheme.headline5
             ),
             SizedBox(height: 35,),

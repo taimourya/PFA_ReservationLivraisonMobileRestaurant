@@ -2,9 +2,12 @@
 
 
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant/widgets/Item.dart';
+import 'package:http/http.dart' as http;
 
 
 class ItemsList extends StatefulWidget {
@@ -23,6 +26,36 @@ class StatItemList extends State<ItemsList> {
 
   String searchText = "";
   final _formKey = GlobalKey<FormState>();
+
+  dynamic data;
+
+  @override
+  void initState() {
+    super.initState();
+    _initItems();
+  }
+
+
+
+  _initItems() {
+    var url = Uri.parse(
+        "http://192.168.8.111:8080/restaurant/buyables?"
+        "restaurant_id=${5}"
+        "&type=${widget.title}"
+        "&mc=${this.searchText}"
+    );
+    http.get(url)
+        .then((response) {
+      print(response.body);
+      setState(() {
+        data = json.decode(response.body);
+      });
+    })
+        .catchError((err) {
+      print(err);
+
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +83,7 @@ class StatItemList extends State<ItemsList> {
                   onChanged: (value) {
                     this.setState(() {
                       this.searchText = value;
+                      _initItems();
                     });
                   },
                 ),
@@ -72,20 +106,22 @@ class StatItemList extends State<ItemsList> {
           ),
         ),
         SizedBox(height: 40,),
+
+        data != null? (data.length == 0? Text("Aucun element trouver"):Text("")):Text(""),
         Expanded(
           child: ListView.builder(
 
-            itemCount: 15,
+            itemCount: data!=null? data.length: 0,
             itemBuilder: (context, index) {
               return Card(
                 child: ListTile(
                   leading: Icon(CupertinoIcons.eye),
-                  title: Text('Item ' + index.toString()),
-                  trailing: Text("${"35"} DH"),
+                  title: Text(data[index]['name']),
+                  trailing: Text("${data[index]['price']} DH"),
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Item(index)),
+                      MaterialPageRoute(builder: (context) => Item(data[index]['id'])),
                     );
                   },
                 ),

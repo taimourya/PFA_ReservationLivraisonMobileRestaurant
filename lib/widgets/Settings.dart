@@ -35,7 +35,7 @@ class StatSettings extends State<Settings> {
         body: TabBarView(
           children: <Widget>[
 
-            Profil("MCDO", "Maarif boulvard zerktoni", "+212643334135"),
+            Profil(),
 
             Historique(),
           ],

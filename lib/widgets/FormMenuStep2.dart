@@ -1,8 +1,12 @@
 
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant/widgets/DrawerMenu.dart';
+import 'package:http/http.dart' as http;
+import 'package:restaurant/widgets/GestionRestaurant.dart';
 
 class FormMenuStep2 extends StatefulWidget {
 
@@ -26,6 +30,52 @@ class _StateFormMenuStep2 extends State<FormMenuStep2>{
   String searchText = "";
   List<int> selectedItems = [];
   final _formKey = GlobalKey<FormState>();
+
+  dynamic data;
+
+  @override
+  void initState() {
+    super.initState();
+    _initItems();
+  }
+
+
+
+  _initItems() {
+    var url = Uri.parse(
+        "http://192.168.8.111:8080/restaurant/buyables?"
+            "restaurant_id=${5}"
+            "&type=All"
+            "&mc=${this.searchText}"
+    );
+    http.get(url)
+        .then((response) {
+      print(response.body);
+      setState(() {
+        data = json.decode(response.body);
+      });
+    })
+        .catchError((err) {
+      print(err);
+
+    });
+  }
+
+
+  addMenu() {
+    http.post(
+      Uri.parse('http://192.168.8.111:8080/save/menu'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, Object>{
+        'restaurant_id': '5',
+        "name": widget.nomMenu,
+        "price": widget.prixMenu,
+        "items": selectedItems
+      }),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +109,7 @@ class _StateFormMenuStep2 extends State<FormMenuStep2>{
                     onChanged: (value) {
                       this.setState(() {
                         this.searchText = value;
+                        _initItems();
                       });
                     },
                   ),
@@ -84,23 +135,23 @@ class _StateFormMenuStep2 extends State<FormMenuStep2>{
           Expanded(
             child: ListView.builder(
 
-              itemCount: 15,
+              itemCount: data!=null?data.length: 0,
               itemBuilder: (context, index) {
                 return Card(
                   child: ListTile(
                     leading: Icon(CupertinoIcons.eye),
-                    title: Text("Item ${index}", style: TextStyle(
-                        color: selectedItems.contains(index)? Colors.red: Colors.black
+                    title: Text("${data[index]['name']}", style: TextStyle(
+                        color: selectedItems.contains(data[index]['id'])? Colors.red: Colors.black
                       ),
                     ),
-                    trailing: Text("${"35"} DH"),
+                    trailing: Text("${data[index]['price']} DH"),
                     onTap: () {
                       setState(() {
-                        if(selectedItems.contains(index)) {
-                          selectedItems.remove(index);
+                        if(selectedItems.contains(data[index]['id'])) {
+                          selectedItems.remove(data[index]['id']);
                         }
                         else {
-                          selectedItems.add(index);
+                          selectedItems.add(data[index]['id']);
                         }
                       });
                     },
@@ -115,7 +166,17 @@ class _StateFormMenuStep2 extends State<FormMenuStep2>{
                 child: ElevatedButton(
                   child: Text("Valider"),
                   onPressed: () {
-
+                    if(widget.nomMenu.length != 0 && widget.prixMenu != 0 && selectedItems.length != 0) {
+                      addMenu();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => GestionRestaurant()),
+                      );
+                    }
+                    else {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text('Erreur de saisie')));
+                    }
                   },
                 ),
               ),

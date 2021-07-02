@@ -1,9 +1,13 @@
 
 
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant/widgets/DrawerMenu.dart';
+import 'package:http/http.dart' as http;
+import 'package:restaurant/widgets/GestionRestaurant.dart';
 
 class FormItem extends StatefulWidget {
 
@@ -26,7 +30,7 @@ class _StateFormItem extends State<FormItem>{
   String nom = "";
   double prix = 0.0 ;
   String categorie = "cat 1";
-  List<String> listCategories = ["cat 1", "cat 2", "cat 3", "cat 4", "cat 5"];
+  List<String> listCategories = ["cat 1"];
 
   bool addNewCategorie = false;
 
@@ -34,11 +38,54 @@ class _StateFormItem extends State<FormItem>{
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    super.initState();
+    _initCategories();
+  }
+
+  _initCategories() {
+    var url = Uri.parse(
+        "http://192.168.8.111:8080/restaurant/get/categories"
+            "?restaurant_id=${5}"
+            "&type=${widget.typeItem}"
+    );
+    http.get(url).then((response) {
+      print(response.body);
+      dynamic data;
+      data = json.decode(response.body);
+      setState(() {
+        listCategories.removeAt(0);
+        for(int i = 0; i < data.length; i++) {
+          setState(() {
+            listCategories.add(data[i]['name']);
+          });
+          categorie = listCategories.first;
+        }
+      });
+    }).catchError((err) {
+      print(err);
+
+    });
+  }
+
+  addItem(String type) {
+    http.post(
+      Uri.parse('http://192.168.8.111:8080/save/item'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'restaurant_id': '5',
+        'name': this.nom,
+        'price': this.prix.toString(),
+        'categoryName': this.categorie,
+        'type': type,
+      }),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    print("nom : ${nom}");
-    print("prix : ${prix}");
-    print("categorie : ${categorie}");
-    print("addNewCategorie : ${addNewCategorie}");
     return Scaffold(
       appBar: AppBar(
         title: Text("Home"),
@@ -104,7 +151,6 @@ class _StateFormItem extends State<FormItem>{
             SizedBox(height: 25,),
             Row(
                 children: [
-
                   !addNewCategorie? SizedBox(width: 100,) : SizedBox(width: 20,),
 
                   !addNewCategorie? Padding(
@@ -185,24 +231,20 @@ class _StateFormItem extends State<FormItem>{
                     child: Text("Valider"),
                     onPressed: () {
                       if(widget.idToEdit == 0) {
-                        if(addNewCategorie) {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(SnackBar(content: Text('Ajout item + category')));
+                        if(categorie.length != 0 && nom.length != 0 && prix != 0) {
+                          addItem(widget.typeItem);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => GestionRestaurant()),
+                          );
                         }
                         else {
                           ScaffoldMessenger.of(context)
-                              .showSnackBar(SnackBar(content: Text('Ajout item seule')));
+                              .showSnackBar(SnackBar(content: Text('Erreur de saisie')));
                         }
                       }
                       else {
-                        if(addNewCategorie) {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(SnackBar(content: Text('edit item + add category')));
-                        }
-                        else {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(SnackBar(content: Text('edit item seule')));
-                        }
+
                       }
                     },
                   ),
