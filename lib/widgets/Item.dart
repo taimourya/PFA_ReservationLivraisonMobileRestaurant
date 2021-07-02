@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:restaurant/API/Host.dart';
 import 'package:restaurant/widgets/DrawerMenu.dart';
 import 'package:restaurant/widgets/FormItem.dart';
 import 'package:http/http.dart' as http;
@@ -36,7 +37,7 @@ class StatItem extends State<Item> {
 
   _initItem() {
     var url = Uri.parse(
-        "http://192.168.8.111:8080/buyable?id=${widget.itemId}"
+        "http://${Host.url}:8080/buyable?id=${widget.itemId}"
     );
     http.get(url).then((response) {
       print(response.body);

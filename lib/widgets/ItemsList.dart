@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:restaurant/API/Host.dart';
 import 'package:restaurant/widgets/Item.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -54,7 +55,7 @@ class StatItemList extends State<ItemsList> {
 
   _initItems() {
     var url = Uri.parse(
-        "http://192.168.8.111:8080/restaurant/buyables?"
+        "http://${Host.url}:8080/restaurant/buyables?"
         "restaurant_id=$userId"
         "&type=${widget.title}"
         "&mc=${this.searchText}"

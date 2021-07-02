@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:restaurant/API/Host.dart';
 import 'package:restaurant/widgets/DrawerMenu.dart';
 import 'package:http/http.dart' as http;
 import 'package:restaurant/widgets/GestionRestaurant.dart';
@@ -59,7 +60,7 @@ class _StateFormMenuStep2 extends State<FormMenuStep2>{
 
   _initItems() {
     var url = Uri.parse(
-        "http://192.168.8.111:8080/restaurant/buyables?"
+        "http://${Host.url}:8080/restaurant/buyables?"
             "restaurant_id=$userId"
             "&type=All"
             "&mc=${this.searchText}"
@@ -80,7 +81,7 @@ class _StateFormMenuStep2 extends State<FormMenuStep2>{
 
   addMenu() {
     http.post(
-      Uri.parse('http://192.168.8.111:8080/save/menu'),
+      Uri.parse('http://${Host.url}:8080/save/menu'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

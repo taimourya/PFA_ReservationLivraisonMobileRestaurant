@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:restaurant/API/Host.dart';
 import 'package:restaurant/widgets/DrawerMenu.dart';
 import 'package:http/http.dart' as http;
 
@@ -22,7 +23,7 @@ class StatReclamation extends State<Reclamation> {
 
   addReclamation() {
     http.post(
-      Uri.parse('http://192.168.8.111:8080/create/reclamation'),
+      Uri.parse('http://${Host.url}:8080/create/reclamation'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

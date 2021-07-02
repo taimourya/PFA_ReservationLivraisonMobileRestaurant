@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
+import 'package:restaurant/API/Host.dart';
 import 'package:restaurant/widgets/DrawerMenu.dart';
 import 'package:flutter_login/theme.dart';
 import 'package:restaurant/widgets/Home.dart';
@@ -60,7 +61,7 @@ class _LoginState extends State<Login> {
 
         return Future.delayed(loginTime).then((_) {
           return http.post(
-            Uri.parse('http://192.168.8.111:8080/user/login'),
+            Uri.parse('http://${Host.url}:8080/user/login'),
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
             },
