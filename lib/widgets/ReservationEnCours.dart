@@ -31,7 +31,7 @@ class _StateReservationEnCours extends State<ReservationEnCours>{
 
   _initItems() {
     var url = Uri.parse(
-        "http://${Host.url}:8080/restaurant/reservationEnCours?restaurant_id=${5}"
+        "${Host.url}/restaurant/reservationEnCours?restaurant_id=${5}"
     );
     http.get(url).then((response) {
       print(response.body);

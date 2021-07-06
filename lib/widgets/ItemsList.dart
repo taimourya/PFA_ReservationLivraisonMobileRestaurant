@@ -55,7 +55,7 @@ class StatItemList extends State<ItemsList> {
 
   _initItems() {
     var url = Uri.parse(
-        "http://${Host.url}:8080/restaurant/buyables?"
+        "${Host.url}/restaurant/buyables?"
         "restaurant_id=$userId"
         "&type=${widget.title}"
         "&mc=${this.searchText}"

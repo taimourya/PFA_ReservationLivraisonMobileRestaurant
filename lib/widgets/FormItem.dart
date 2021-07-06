@@ -66,7 +66,7 @@ class _StateFormItem extends State<FormItem>{
 
   _initCategories() {
     var url = Uri.parse(
-        "http://${Host.url}:8080/restaurant/get/categories"
+        "${Host.url}/restaurant/get/categories"
             "?restaurant_id=$userId"
             "&type=${widget.typeItem}"
     );
@@ -91,7 +91,7 @@ class _StateFormItem extends State<FormItem>{
 
   addItem(String type) {
     http.post(
-      Uri.parse('http://${Host.url}:8080/save/item'),
+      Uri.parse('${Host.url}/save/item'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

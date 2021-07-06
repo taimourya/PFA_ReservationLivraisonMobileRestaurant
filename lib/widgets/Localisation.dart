@@ -55,7 +55,7 @@ class _StateLocalisation extends State<Localisation>{
 
   _saveLocalisation() {
     var url = Uri.parse(
-        "http://${Host.url}:8080/restaurant/localisation"
+        "${Host.url}/restaurant/localisation"
             "?restaurant_id=$userId"
             "&latitude=${source.position.latitude}"
             "&longitude=${source.position.longitude}"

@@ -60,7 +60,7 @@ class _StateFormMenuStep2 extends State<FormMenuStep2>{
 
   _initItems() {
     var url = Uri.parse(
-        "http://${Host.url}:8080/restaurant/buyables?"
+        "${Host.url}/restaurant/buyables?"
             "restaurant_id=$userId"
             "&type=All"
             "&mc=${this.searchText}"
@@ -81,7 +81,7 @@ class _StateFormMenuStep2 extends State<FormMenuStep2>{
 
   addMenu() {
     http.post(
-      Uri.parse('http://${Host.url}:8080/save/menu'),
+      Uri.parse('${Host.url}/save/menu'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
