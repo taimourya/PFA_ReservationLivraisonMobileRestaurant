@@ -84,7 +84,7 @@ class _LoginState extends State<Login> {
               //return "username or password incorrect";
             }
           }).catchError((err) {
-            print(err);
+            return "Probleme au niveau du serveur";
           });
         });
       },

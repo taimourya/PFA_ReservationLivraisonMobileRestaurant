@@ -13,6 +13,7 @@ import 'package:restaurant/widgets/DrawerMenu.dart';
 import 'package:http/http.dart' as http;
 import 'package:restaurant/widgets/GestionRestaurant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:geolocator/geolocator.dart';
 
 class Localisation extends StatefulWidget {
   @override
@@ -40,12 +41,28 @@ class _StateLocalisation extends State<Localisation>{
     super.initState();
     getSharedUserId();
   }
+
+
+
   Future<void> getSharedUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final id = prefs.getInt('user_id');
 
     setState(() {
       userId = id == null? 0 : id;
+    });
+  }
+  Future<void> getCurrentPosition() async {
+    var currentPosition;
+    currentPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    LatLng position = LatLng(currentPosition.latitude, currentPosition.longitude);
+    setState(() {
+      source = Marker(
+          markerId: MarkerId('home'),
+          position: position,
+          icon: BitmapDescriptor.defaultMarker,
+          infoWindow: InfoWindow(title: 'Current Location')
+      );
     });
   }
 
@@ -75,6 +92,7 @@ class _StateLocalisation extends State<Localisation>{
 
   @override
   Widget build(BuildContext context) {
+    print("source : ${source.position}");
     return Scaffold(
       appBar: AppBar(
         title: Text('Localisez votre restaurant'),
@@ -100,7 +118,7 @@ class _StateLocalisation extends State<Localisation>{
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.location_searching),
         onPressed: () {
-
+          getCurrentPosition();
         },
       ),
       body: GoogleMap(
